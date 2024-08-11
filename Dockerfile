@@ -11,7 +11,7 @@ COPY pyproject.toml pdm.lock* /app/
 RUN pip install --no-cache-dir pdm
 
 # Install dependencies
-RUN pdm install --prod --no-dev
+RUN pdm install --production
 
 # Copy the rest of the application code
 COPY . /app
