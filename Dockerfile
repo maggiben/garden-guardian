@@ -13,11 +13,11 @@ RUN pip install --no-cache-dir pdm
 # Ensure pdm's virtual environment is used
 ENV PATH="/app/.venv/bin:${PATH}"
 
-# Install dependencies
-RUN pdm install --production
-
 # Copy the rest of the application code
 COPY . /app
+
+# Install dependencies
+RUN pdm install --production
 
 # Set environment variables
 ENV FLASK_APP=app.py
@@ -28,4 +28,4 @@ ENV FLASK_RUN_PORT=3001
 EXPOSE 3001
 
 # Run the application
-CMD ["pdm", "run", "flask", "run"]
+CMD ["pdm", "run", "flask", "run", "-h", "localhost", "-p", "3001"]
