@@ -28,4 +28,4 @@ ENV FLASK_RUN_PORT=3001
 EXPOSE 3001
 
 # Run the application
-CMD ["pdm", "run", "flask", "run", "-h", "localhost", "-p", "3001"]
+CMD ["pdm", "run", "flask", "run"]
