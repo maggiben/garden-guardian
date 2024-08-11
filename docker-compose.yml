@@ -1,6 +1,6 @@
 services:
   web:
-    image: rbmaggi/garden-guardian:tagname
+    image: rbmaggi/garden-guardian:latest
     build:
       context: .
       dockerfile: Dockerfile
