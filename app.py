@@ -111,11 +111,29 @@ def api_get_device(device_id):
 
 
 @app.route('/api/devices/generate', methods=['POST'])
+# def api_generate_data():
+#     if request.method == "OPTIONS": # CORS preflight
+#         return _build_cors_preflight_response()
+#     data = devices.write_measurements(request.json['deviceIds'])
+#     return _corsify_actual_response(jsonify(data))
 def api_generate_data():
-    if request.method == "OPTIONS": # CORS preflight
+    if request.method == "OPTIONS":  # CORS preflight
         return _build_cors_preflight_response()
-    data = devices.write_measurements(request.json['deviceIds'])
-    return _corsify_actual_response(jsonify(data))
+
+    data = request.json  # Get the JSON payload from the request
+    results = []
+
+    for device in data:
+        device_id = device.get('sensor')
+        if not device_id:
+            continue
+
+        # Call the modified write_measurements function with the entire device data
+        result = devices.write_measurements(device_id, device)
+        if result is not None:
+            results.append(result)
+
+    return _corsify_actual_response(jsonify(results))
 
 
 @app.route('/api/devices', methods=['GET'])

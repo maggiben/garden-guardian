@@ -91,7 +91,7 @@ def write_measurements(device_ids):
         print(f"Writing measurements for: {device_id}")
         write_measurement(device_id)
 
-def write_measurement(device_id):
+def write_measurement2(device_id):
     influxdb_client = InfluxDBClient(url=config.get('APP', 'INFLUX_URL'),
                                      token=os.environ.get('INFLUX_TOKEN'),
                                      org=os.environ.get('INFLUX_ORG'))
@@ -121,6 +121,42 @@ def write_measurement(device_id):
 
     # Return None on failure
     return None
+
+def write_measurements(device_id, device_data):
+    influxdb_client = InfluxDBClient(url=config.get('APP', 'INFLUX_URL'),
+                                     token=os.environ.get('INFLUX_TOKEN'),
+                                     org=os.environ.get('INFLUX_ORG'))
+    write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
+    
+    # Write a point for each relevant section in the device data
+    sections = ['sensors', 'network', 'cpu', 'hdd', 'snapshots', 'ram']
+    success = True
+
+    for section in sections:
+        section_data = device_data.get(section)
+        if section_data:
+            point = Point(section) \
+                .tag("device", device_id)
+
+            # Add fields for each key-value pair in the section
+            for key, value in section_data.items():
+                try:
+                    # Convert to a float if possible
+                    value = float(value.replace("'", "").replace("C", "").replace("MB", "").replace("G", "").replace("%", "").replace("ms", "").replace(",", "").strip())
+                except ValueError:
+                    pass  # Keep the original value if conversion fails
+                point.field(key, value)
+
+            point.time(datetime.utcnow())
+            print(f"Writing: {point.to_line_protocol()}")
+            client_response = write_api.write(bucket=config.get('APP', 'INFLUX_BUCKET'), record=point)
+
+            # Check for write success
+            if client_response is not None:
+                success = False
+
+    # Return the device_id if all writes were successful
+    return device_id if success else None
 
 
 def get_measurements2(query):
