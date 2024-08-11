@@ -83,6 +83,10 @@ def create_device(device_id=None):
     return None
 
 def write_measurements(device_ids):
+    # Check if device_ids is a string and convert it to a list
+    if isinstance(device_ids, str):
+        device_ids = [device_ids]
+    
     for device_id in device_ids:
         print(f"Writing measurements for: {device_id}")
         write_measurement(device_id)
@@ -119,7 +123,7 @@ def write_measurement(device_id):
     return None
 
 
-def get_measurements(query):
+def get_measurements2(query):
     influxdb_client = InfluxDBClient(url=config.get('APP', 'INFLUX_URL'),
                                      token=os.environ.get('INFLUX_TOKEN'),
                                      org=os.environ.get('INFLUX_ORG'))
@@ -138,6 +142,41 @@ def get_measurements(query):
     for row in result:
         response += (',').join(row) + ('\n')
     return response
+
+def get_measurements(device_id):
+    influxdb_client = InfluxDBClient(
+        url=config.get('APP', 'INFLUX_URL'),
+        token=os.environ.get('INFLUX_TOKEN'),
+        org=os.environ.get('INFLUX_ORG')
+    )
+
+    query_api = QueryApi(influxdb_client)
+
+    # Construct a proper Flux query
+    # flux_query = f'from(bucket: "{config.get("APP", "INFLUX_BUCKET_AUTH")}") ' \
+    #             f'|> range(start: 0) ' \
+    #             f'|> filter(fn: (r) => r["_measurement"] == "temperature")' \
+    #             f'|> filter(fn: (r) => r["device"] == "{device_id}"' 
+
+    # Api token: ILox_M3uZJXu9g8v8L-v1QgW0PHZlWqu4mVir_-d0eDj-gC4YzhNBuYuKuoyqAeFpg3odTi_e4mUQIejbiqcJg==
+
+    try:
+        query = f'''
+            from(bucket: "{config.get("APP", "INFLUX_BUCKET")}")
+            |> range(start: 0)
+            '''
+
+        response = query_api.query(query)
+        result = []
+        for table in response:
+            for record in table.records:
+                result.append(record)
+        return result
+
+    except Exception as e:
+        print(f"Error executing query: {e}")
+        return None
+
 
 # TODO
 # Function should return a response code

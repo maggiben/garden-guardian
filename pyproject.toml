@@ -4,6 +4,7 @@ version = ""
 description = ""
 authors = [
     {name = "Jason Stirnaman", email = "jstirnaman@influxdata.com"},
+    {name = "Benjamin Maggi", email = "benjaminmaggi@gmail.com"},
 ]
 dependencies = [
     "flask>=2.1.2",
