@@ -10,14 +10,14 @@ COPY pyproject.toml pdm.lock* /app/
 # Install pdm
 RUN pip install --no-cache-dir pdm
 
+# Ensure pdm's virtual environment is used
+ENV PATH="/app/.venv/bin:${PATH}"
+
 # Install dependencies
 RUN pdm install --production
 
 # Copy the rest of the application code
 COPY . /app
-
-# Ensure pdm's virtual environment is used
-ENV PATH="/app/.venv/bin:${PATH}"
 
 # Set environment variables
 ENV FLASK_APP=app.py
