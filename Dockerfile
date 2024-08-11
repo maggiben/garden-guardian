@@ -16,6 +16,9 @@ RUN pdm install --production
 # Copy the rest of the application code
 COPY . /app
 
+# Ensure pdm's virtual environment is used
+ENV PATH="/app/.venv/bin:${PATH}"
+
 # Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
