@@ -1,0 +1,12 @@
+services:
+  web:
+    image: rbmaggi/garden-guardian:tagname
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      FLASK_ENV: development
+      INFLUX_TOKEN: fevEyNmBD3E1vUTXF4KZ1EiQNAzHjcj4Dnso2XcjquNRGaj0Sz87jV8MLAXP5WRWbNjha9PgUx6h6UQYAv391A==
+      INFLUX_ORG: dexterlab
