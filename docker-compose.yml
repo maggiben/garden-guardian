@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
+    restart: unless-stopped
     environment:
       FLASK_ENV: development
       INFLUX_TOKEN: fevEyNmBD3E1vUTXF4KZ1EiQNAzHjcj4Dnso2XcjquNRGaj0Sz87jV8MLAXP5WRWbNjha9PgUx6h6UQYAv391A==
