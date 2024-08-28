@@ -129,7 +129,7 @@ def write_measurements(device_id, device_data):
     write_api = influxdb_client.write_api(write_options=SYNCHRONOUS)
     
     # Write a point for each relevant section in the device data
-    sections = ['sensors', 'network', 'cpu', 'hdd', 'snapshots', 'ram', 'flow']
+    sections = ['sensors', 'network', 'cpu', 'hdd', 'ram', 'flow']
     success = True
 
     for section in sections:
